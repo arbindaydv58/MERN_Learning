@@ -1,8 +1,10 @@
+import fileUploadSvc from "../../service/fileupload.service.js";
+
 class AuthController {
-  registerUser = (req, res, next) => {
+  registerUser = async (req, res, next) => {
     try {
       const data = req.body;
-      const file = req.file;
+      const file = await fileUploadSvc.uploadFile(req.file.path,"/users");
 
       res.json({
         data: { data, file },
