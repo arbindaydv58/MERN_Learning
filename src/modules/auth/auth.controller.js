@@ -1,10 +1,14 @@
 import fileUploadSvc from "../../service/fileupload.service.js";
+import authMailSvc from "./auth.mail.js";
 
 class AuthController {
   registerUser = async (req, res, next) => {
     try {
       const data = req.body;
-      const file = await fileUploadSvc.uploadFile(req.file.path,"/users");
+      const file = await fileUploadSvc.uploadFile(req.file.path, "/users");
+
+      //*SMTP Server
+      await authMailSvc.notifyUserRegistration(data);
 
       res.json({
         data: { data, file },
@@ -17,7 +21,7 @@ class AuthController {
     }
   };
 
-  getLoggedInUserProfile  = (req, res, next) => {
+  getLoggedInUserProfile = (req, res, next) => {
     res.json({
       data: {},
       message: "your profile",
@@ -26,8 +30,7 @@ class AuthController {
     });
   };
 
-  updateUserById =(req,res,next) => {}
-
+  updateUserById = (req, res, next) => {};
 }
 
 const authCtrl = new AuthController();
