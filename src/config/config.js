@@ -16,4 +16,8 @@ const SMTPConfig = {
   form: process.env.SMTP_FORM_ADDRESS,
 };
 
-export { cloudinaryConfig ,SMTPConfig};
+const AppConfig = {
+  feURL: process.env.FRONTEND_URL,
+};
+
+export { cloudinaryConfig, SMTPConfig, AppConfig };

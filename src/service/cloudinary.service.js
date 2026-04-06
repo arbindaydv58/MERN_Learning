@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import { cloudinaryConfig } from "../config/config.js";
-import deleteFile from "../utilities/helpers.js";
+import {deleteFile} from "../utilities/helpers.js";
 
 class CloudinaryService {
   //*config

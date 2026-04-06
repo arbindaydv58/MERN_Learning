@@ -1,3 +1,4 @@
+import { AppConfig } from "../../config/config.js";
 import EmailService from "../../service/email.service.js";
 
 class AuthEmail {
@@ -7,7 +8,7 @@ class AuthEmail {
   }
   notifyUserRegistration = async (user) => {
     try {
-      const activationLink = "http://localhost:5173/activate/token";
+      const activationLink = `${AppConfig.feURL}/activate/${user.activationToken}`;
       const emailTemplate = `
         <div style="margin:0;padding:0;background-color:#031b12;">
           <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">

@@ -12,6 +12,7 @@
    "type": "module",
    "packageManager": "pnpm@10.32.1",
    "dependencies": {
+      "bcryptjs": "^3.0.3",
       "cloudinary": "^2.9.0",
       "dotenv": "^17.4.0",
       "express": "^5.2.1",
