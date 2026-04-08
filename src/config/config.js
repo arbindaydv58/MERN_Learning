@@ -19,5 +19,10 @@ const SMTPConfig = {
 const AppConfig = {
   feURL: process.env.FRONTEND_URL,
 };
+const mongoConfig = {
+  url: process.env.MONGODB_URL,
+  dbName: process.env.MONGODB_NAME,
+};
 
-export { cloudinaryConfig, SMTPConfig, AppConfig };
+
+export { cloudinaryConfig, SMTPConfig, AppConfig,mongoConfig };
