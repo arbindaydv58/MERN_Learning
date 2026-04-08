@@ -9,7 +9,7 @@ class UserService {
       const data = req.body;
 
       if (req.file) {
-        data.file = await fileUploadSvc.uploadFile(req.file.path, "/users");
+        data.image = await fileUploadSvc.uploadFile(req.file.path, "/users");
       }
 
       data.password = bcrypt.hashSync(data.password, 12);

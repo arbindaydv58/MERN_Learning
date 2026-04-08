@@ -2,5 +2,16 @@ const Status = {
   ACTIVE: "active",
   INACTIVE: "inactive",
 };
+const UserRole = {
+  ADMIN: "admin",
+  SELLER: "seller",
+  CUSTOMER: "customer",
+};
 
-export default Status;
+const Gender = {
+  MALE: "male",
+  FEMALE: "female",
+  OTHER: "other",
+};
+
+export { Status, UserRole, Gender };
