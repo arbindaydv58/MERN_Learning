@@ -5,12 +5,13 @@ class AuthController {
   registerUser = async (req, res, next) => {
     try {
       const data = await userSvc.transformUserRegister(req);
+      const user = await userSvc.userRegister(data)
 
       //*SMTP Server
       await authMailSvc.notifyUserRegistration(data);
 
       res.json({
-        data: { data },
+        data: userSvc.getUserPublicProfile(user),
         message: "register sucess",
         status: "Ok",
         options: null,

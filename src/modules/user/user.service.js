@@ -1,7 +1,8 @@
 import fileUploadSvc from "../../service/fileupload.service.js";
 import bcrypt from "bcryptjs";
 import { randomStringGenerate } from "../../utilities/helpers.js";
-import Status from "../../config/constant.js";
+import { Status } from "../../config/constant.js";
+import UserModel from "./user.model.js";
 
 class UserService {
   async transformUserRegister(req) {
@@ -21,6 +22,29 @@ class UserService {
     } catch (exception) {
       throw exception;
     }
+  }
+
+  async userRegister(data) {
+    try {
+      const user = new UserModel(data);
+      return await user.save();
+    } catch (exception) {
+      throw exception;
+    }
+  }
+  getUserPublicProfile(user) {
+    return {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      gender: user.gender,
+      address: user.address,
+      dob: user.dob,
+      phone: user.phone,
+      status: user.status,
+      image: user?.image?.thumbUrl,
+    };
   }
 }
 

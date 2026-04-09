@@ -1,5 +1,5 @@
 import express from "express";
-import "./config.js"
+import "./mongo.config.js";
 import router from "./router.config.js";
 const app = express();
 
@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //static middleware
-app.use('/assets',express.static('./public/uploads'))
+app.use("/assets", express.static("./public/uploads"));
 
 app.use("/api/v1/", router);
 
@@ -29,6 +29,20 @@ app.use((error, req, res, next) => {
   let details = error.details || null;
   let msg = error.message || "Internal server Error...";
   let status = error.status || "SERVER_ERROR";
+
+  //*mongodb unique failed case
+  if (error.name === "MongoServerError") {
+    statusCode = 400;
+    msg = "DB Error";
+    status = "DB_ERROR";
+    details = {};
+
+    if (+error.code === 11000) {
+      Object.keys(error.keyPattern).map((field) => {
+        details[field] = `${field} should be unique`;
+      });
+    }
+  }
 
   res.status(statusCode).json({
     error: details,
