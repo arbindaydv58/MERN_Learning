@@ -3,6 +3,8 @@ import authCtrl from "./auth.controller.js";
 import uploader from "../../middlewares/uploder.middleware.js";
 
 import express from "express";
+import bodyValidator from "../../middlewares/validator.middleware.js";
+import { RegisterUserDTO } from "./auth.validator.js";
 const authRouter = express.Router();
 
 //*Registeration
@@ -14,8 +16,10 @@ const authRouter = express.Router();
 authRouter.post(
   "/register",
   uploader().single("image"), //if your data has image as a file type, and is able to select only 1 image at a time
+  bodyValidator(RegisterUserDTO),
   authCtrl.registerUser,
 );
+authRouter.get("/activate/:token", authCtrl.activateUserProfile);
 authRouter.get("/me", checkLogin(), authCtrl.getLoggedInUserProfile);
 authRouter.put("/:userId", checkLogin(), authCtrl.updateUserById);
 

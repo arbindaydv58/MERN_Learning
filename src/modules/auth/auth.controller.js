@@ -5,7 +5,7 @@ class AuthController {
   registerUser = async (req, res, next) => {
     try {
       const data = await userSvc.transformUserRegister(req);
-      const user = await userSvc.userRegister(data)
+      const user = await userSvc.userRegister(data);
 
       //*SMTP Server
       await authMailSvc.notifyUserRegistration(data);
@@ -15,6 +15,18 @@ class AuthController {
         message: "register sucess",
         status: "Ok",
         options: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  // * Activate User
+  activateUserProfile = async (req, res, next) => {
+    try {
+      let token = req.params.token;
+      const userDetails = userSvc.getSingleRowByFilter({
+        activationToken: token,
       });
     } catch (exception) {
       next(exception);

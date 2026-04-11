@@ -32,6 +32,16 @@ class UserService {
       throw exception;
     }
   }
+
+  async getSingleRowByFilter(filter) {
+    try {
+      const userDetails = await UserModel.findOne(filter);
+      return userDetails;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
   getUserPublicProfile(user) {
     return {
       _id: user._id,

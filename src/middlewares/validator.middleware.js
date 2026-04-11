@@ -12,9 +12,20 @@ const bodyValidator = (rules) => {
       await rules.validateAsync(payload, { abortEarly: false });
       next();
     } catch (exception) {
-      next(exception);
+      let error = {
+        code: 400,
+        message: "Validation Failed",
+        status: "VALIDATION_FAILED",
+        details: {},
+      };
+      exception.details.map((errorObj) => {
+        let field = errorObj.path.pop();
+        error.details[field] = errorObj.message;
+      });
+      // console.error(exception)
+      next(error);
     }
   };
 };
 
-module.exports = bodyValidator;
+export default bodyValidator;
