@@ -13,7 +13,7 @@ const SMTPConfig = {
   port: process.env.SMTP_PORT,
   user: process.env.SMTP_USER,
   password: process.env.SMTP_PASSWORD,
-  form: process.env.SMTP_FORM_ADDRESS,
+  from: process.env.SMTP_FORM_ADDRESS,
 };
 
 const AppConfig = {

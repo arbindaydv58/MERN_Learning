@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import { cloudinaryConfig } from "../config/config.js";
-import {deleteFile} from "../utilities/helpers.js";
+import { deleteFile } from "../utilities/helpers.js";
 
 class CloudinaryService {
   //*config
@@ -26,7 +26,7 @@ class CloudinaryService {
       });
 
       //*delete local file after upload
-        await deleteFile(filepath)
+      await deleteFile(filepath);
 
       return {
         public_id: public_id,
