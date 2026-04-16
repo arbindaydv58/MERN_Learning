@@ -4,7 +4,7 @@ import uploader from "../../middlewares/uploder.middleware.js";
 
 import express from "express";
 import bodyValidator from "../../middlewares/validator.middleware.js";
-import { RegisterUserDTO } from "./auth.validator.js";
+import { LoginUserDTO, RegisterUserDTO } from "./auth.validator.js";
 const authRouter = express.Router();
 
 //*Registeration
@@ -20,6 +20,7 @@ authRouter.post(
   authCtrl.registerUser,
 );
 authRouter.get("/activate/:token", authCtrl.activateUserProfile);
+authRouter.post("/login",bodyValidator(LoginUserDTO),authCtrl.loginUser)
 authRouter.get("/me", checkLogin(), authCtrl.getLoggedInUserProfile);
 authRouter.put("/:userId", checkLogin(), authCtrl.updateUserById);
 

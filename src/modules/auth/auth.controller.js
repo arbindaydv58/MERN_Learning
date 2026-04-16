@@ -1,4 +1,3 @@
-
 import { randomStringGenerate } from "../../utilities/helpers.js";
 import userSvc from "../user/user.service.js";
 import authMailSvc from "./auth.mail.js";
@@ -56,14 +55,15 @@ class AuthController {
           optional: null,
         });
       } else {
-        userDetails.activationToken =null;
+        userDetails.activationToken = null;
         userDetails.expiryTime = null;
         userDetails.isActive = true;
         await userDetails.save();
         await authMailSvc.notifyUserActivationSuccess(userDetails);
         res.json({
           data: null,
-          message: "Your account has been activated successfully. Please log in to access your profile.",
+          message:
+            "Your account has been activated successfully. Please log in to access your profile.",
           status: "ACCOUNT_ACTIVATED",
           optional: null,
         });
@@ -72,6 +72,8 @@ class AuthController {
       next(exception);
     }
   };
+
+  loginUser = async (req, res, next) => {};
 
   getLoggedInUserProfile = (req, res, next) => {
     res.json({
