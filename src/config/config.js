@@ -18,11 +18,11 @@ const SMTPConfig = {
 
 const AppConfig = {
   feURL: process.env.FRONTEND_URL,
+  jwtSecret: process.env.JWT_SECRET_KEY,
 };
 const mongoConfig = {
   url: process.env.MONGODB_URL,
   dbName: process.env.MONGODB_NAME,
 };
 
-
-export { cloudinaryConfig, SMTPConfig, AppConfig,mongoConfig };
+export { cloudinaryConfig, SMTPConfig, AppConfig, mongoConfig };

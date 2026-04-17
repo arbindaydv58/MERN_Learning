@@ -1,6 +1,10 @@
+import { Status } from "../../config/constant.js";
 import { randomStringGenerate } from "../../utilities/helpers.js";
 import userSvc from "../user/user.service.js";
 import authMailSvc from "./auth.mail.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { AppConfig } from "../../config/config.js";
 
 class AuthController {
   registerUser = async (req, res, next) => {
@@ -73,7 +77,69 @@ class AuthController {
     }
   };
 
-  loginUser = async (req, res, next) => {};
+  loginUser = async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      const userInfo = await userSvc.getSingleRowByFilter({ email: email });
+
+      if (!userInfo) {
+        throw {
+          code: 422,
+          message: "User not registered with this email",
+          status: "USER_DOES_NOT_EXISTS",
+        };
+      }
+
+      if (!bcrypt.compareSync(password, userInfo.password)) {
+        throw {
+          code: 422,
+          message: "Credential mismatch",
+          status: "CREDENTIAL_MISMATCH",
+        };
+      }
+
+      if (
+        userInfo.status !== Status.ACTIVE ||
+        userInfo.activationToken !== null
+      ) {
+        throw {
+          code: 422,
+          message:
+            "Your account is not active yet, Please check your email for activation link",
+          Status: "ACCOUNT_NOT_ACTIVE",
+        };
+      }
+
+      //*generate JWT token
+
+      const accessToken = jwt.sign(
+        {
+          sub: userInfo._id,
+          typ: "Bearer",
+        },
+        AppConfig.jwtSecret,
+        { expiresIn: "1hr" },
+      );
+
+      const refreshToken = jwt.sign(
+        {
+          sub: userInfo._id,
+          typ: "Refresh",
+        },
+        AppConfig.jwtSecret,
+        { expiresIn: "7d" },
+      );
+
+      res.json({
+        data: { accessToken: accessToken, refreshToken: refreshToken },
+        message: "Login Successful",
+        status: "LOGIN_SUCCESS",
+        options: null,
+      });
+    } catch (exception) {
+      throw exception;
+    }
+  };
 
   getLoggedInUserProfile = (req, res, next) => {
     res.json({
