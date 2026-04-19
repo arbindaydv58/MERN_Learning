@@ -5,6 +5,7 @@ import authMailSvc from "./auth.mail.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { AppConfig } from "../../config/config.js";
+import authSvc from "./auth.service.js";
 
 class AuthController {
   registerUser = async (req, res, next) => {
@@ -17,7 +18,7 @@ class AuthController {
 
       res.json({
         data: userSvc.getUserPublicProfile(user),
-        message: "register sucess",
+        message: "register success",
         status: "Ok",
         options: null,
       });
@@ -129,6 +130,18 @@ class AuthController {
         AppConfig.jwtSecret,
         { expiresIn: "7d" },
       );
+
+      let sessionData = {
+        user: userInfo._id,
+        token:{
+          access: accessToken,
+          refresh: refreshToken,
+        },
+        accessDevice: req.headers["user-agent"],
+        ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+      }
+
+      await authSvc.storeSession(sessionData);
 
       res.json({
         data: { accessToken: accessToken, refreshToken: refreshToken },
