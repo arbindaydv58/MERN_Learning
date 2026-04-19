@@ -133,13 +133,13 @@ class AuthController {
 
       let sessionData = {
         user: userInfo._id,
-        token:{
+        token: {
           access: accessToken,
           refresh: refreshToken,
         },
         accessDevice: req.headers["user-agent"],
         ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
-      }
+      };
 
       await authSvc.storeSession(sessionData);
 
