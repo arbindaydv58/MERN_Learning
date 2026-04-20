@@ -22,6 +22,8 @@ authRouter.post(
 authRouter.get("/activate/:token", authCtrl.activateUserProfile);
 authRouter.post("/login",bodyValidator(LoginUserDTO),authCtrl.loginUser)
 authRouter.get("/me", checkLogin(), authCtrl.getLoggedInUserProfile);
+authRouter.patch("/logout",checkLogin(),authCtrl.logout)
+
 authRouter.put("/:userId", checkLogin(), authCtrl.updateUserById);
 
 export default authRouter;

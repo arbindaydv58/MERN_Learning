@@ -156,11 +156,43 @@ class AuthController {
 
   getLoggedInUserProfile = (req, res, next) => {
     res.json({
-      data: {},
+      data: req.loginUser,
       message: "your profile",
       status: "Ok",
       options: null,
     });
+  };
+
+  logout = async (req, res, next) => {
+    try {
+      const loginUser = req.loginUser;
+      let filter = {};
+
+      if (req.query.logoutFromAll) {
+        filter = {
+          user: loginUser._id,
+        };
+      } else {
+        const token = req.headers["authorization"].replace("Bearer ", "");
+        
+        filter = {
+          ...filter,
+          "token.access": token,
+        };
+      }
+
+      await authSvc.deletrMultipleSessionData(filter);
+
+      res.json({
+        data: null,
+        message: "Successfully loggrd Out",
+        status: "LOGGED_OUT",
+        option: null,
+      });
+      
+    } catch (exception) {
+      throw exception;
+    }
   };
 
   updateUserById = (req, res, next) => {};

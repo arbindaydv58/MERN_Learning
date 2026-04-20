@@ -18,6 +18,14 @@ class AuthService {
       throw exception;
     }
   }
+
+  async deletrMultipleSessionData(filter) {
+    try {
+      const del = await SessionModel.deleteMany(filter);
+    } catch (exception) {
+      throw exception;
+    }
+  }
 }
 
 const authSvc = new AuthService();
