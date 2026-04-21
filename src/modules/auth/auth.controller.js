@@ -174,7 +174,6 @@ class AuthController {
         };
       } else {
         const token = req.headers["authorization"].replace("Bearer ", "");
-        
         filter = {
           ...filter,
           "token.access": token,
