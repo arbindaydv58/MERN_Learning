@@ -25,4 +25,16 @@ brandRouter.post(
   brandCtrl.createBrand,
 );
 
+brandRouter.get(
+  "/",
+  checkLogin([UserRole.ADMIN, UserRole.SELLER]),
+  brandCtrl.ListAllBrands,
+);
+
+brandRouter.get(
+  "/:brandId",
+  checkLogin([UserRole.ADMIN, UserRole.SELLER]),
+  brandCtrl.getBrandDetailById,
+);
+
 export default brandRouter;

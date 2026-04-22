@@ -25,14 +25,79 @@ class BrandService {
   }
 
   async createData(payload) {
-    try{
-        const brand = new BrandModel(payload);
-        return await brand.save();
-    }catch(exception){
-        throw exception
+    try {
+      const brand = new BrandModel(payload);
+      return await brand.save();
+    } catch (exception) {
+      throw exception;
     }
   }
 
+  async getAllRowsByFilter(filter, { page = 1, limit = 15 }) {
+    try {
+      const skip = (page - 1) * limit;
+      const data = await BrandModel.find(filter)
+        .populate("createdBy", [
+          "_id",
+          "name",
+          "email",
+          "role",
+          "phone",
+          "image",
+        ])
+        .populate("createdBy", [
+          "_id",
+          "name",
+          "email",
+          "role",
+          "phone",
+          "image",
+        ])
+        .sort({ createdAt: "desc" })
+        .skip(skip)
+        .limit(limit);
+
+      const count = await BrandModel.countDocuments(filter);
+
+      return {
+        data,
+        pagination: {
+          page: page,
+          limit: limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      };
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async getSingleRowByFilter(filter) {
+    try {
+      const data = await BrandModel.findOne(filter)
+        .populate("createdBy", [
+          "_id",
+          "name",
+          "email",
+          "role",
+          "phone",
+          "image",
+        ])
+        .populate("updatedBy", [
+          "_id",
+          "name",
+          "email",
+          "role",
+          "phone",
+          "image",
+        ]);
+
+      return data;
+    } catch (exception) {
+      throw exception;
+    }
+  }
 }
 
 const brandSvc = new BrandService();
