@@ -17,6 +17,11 @@ const BrandDTO = Joi.object({
   logo: Joi.string().allow(null, "").optional().default(null),
 });
 
+//public api
+brandRouter.get("/all-list", brandCtrl.listAllForPublic);
+
+//private api
+
 brandRouter.post(
   "/",
   checkLogin([UserRole.ADMIN, UserRole.SELLER]),
@@ -35,6 +40,20 @@ brandRouter.get(
   "/:brandId",
   checkLogin([UserRole.ADMIN, UserRole.SELLER]),
   brandCtrl.getBrandDetailById,
+);
+
+brandRouter.put(
+  "/:brandId",
+  checkLogin([UserRole.ADMIN, UserRole.SELLER]),
+  uploader().single("logo"),
+  bodyValidator(BrandDTO),
+  brandCtrl.updateBrandById,
+);
+
+brandRouter.delete(
+  "/:brandId",
+  checkLogin([UserRole.ADMIN, UserRole.SELLER]),
+  brandCtrl.deleteBrandById,
 );
 
 export default brandRouter;

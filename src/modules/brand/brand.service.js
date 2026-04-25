@@ -33,6 +33,30 @@ class BrandService {
     }
   }
 
+  async updateBrandDetailByFilter(filter, payload) {
+    try {
+      const updated = await BrandModel.findOneAndUpdate(
+        filter,
+        {
+          $set: payload,
+        },
+        { new: true },
+      );
+      return updated;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async deleteSungleRowByFilter(filter) {
+    try {
+      const del = await BrandModel.findOneAndDelete(filter);
+      return del;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
   async getAllRowsByFilter(filter, { page = 1, limit = 15 }) {
     try {
       const skip = (page - 1) * limit;
@@ -45,7 +69,7 @@ class BrandService {
           "phone",
           "image",
         ])
-        .populate("createdBy", [
+        .populate("updatedBy", [
           "_id",
           "name",
           "email",
@@ -94,6 +118,23 @@ class BrandService {
         ]);
 
       return data;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async transfromToBrandDataForUpdate(req, oldBrand) {
+    try {
+      const payload = req.body;
+      if (req.file) {
+        payload.logo = await fileUploadSvc.uploadFile(req.file.path, "/brand/");
+      } else {
+        payload.logo = oldBrand.logo;
+      }
+
+      payload.updateBy = req.loginUser._id;
+
+      return payload;
     } catch (exception) {
       throw exception;
     }

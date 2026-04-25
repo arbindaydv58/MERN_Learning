@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const strongPasswordPattern =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\d])(?=.*[\w_])[a-zA-Z\d\w_]{8,25}$/;
+   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const RegisterUserDTO = Joi.object({
   name: Joi.string().min(5).max(50).required(),
   email: Joi.string().email().required(),
