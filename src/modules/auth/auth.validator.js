@@ -8,7 +8,7 @@ const RegisterUserDTO = Joi.object({
   password: Joi.string().regex(strongPasswordPattern).required(),
   confirmPassword: Joi.ref("password"),
   role: Joi.string()
-    .regex(/^(Admin|customer|seller)$/)
+    .regex(/^(admin|customer|seller)$/)
     .optional()
     .default("customer"),
   address: Joi.string().allow(null, "").optional().default(null),
