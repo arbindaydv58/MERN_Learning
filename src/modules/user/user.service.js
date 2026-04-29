@@ -24,6 +24,22 @@ class UserService {
     }
   }
 
+  async transformUserUpdate(req, user) {
+    try {
+      const data = req.body;
+
+      if (req.file) {
+        data.image = await fileUploadSVC.uploadFile(req.file.path, "/users");
+      } else {
+        data.image = user.image;
+      }
+
+      return data;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
   async userRegister(data) {
     try {
       const user = new UserModel(data);
@@ -33,10 +49,55 @@ class UserService {
     }
   }
 
+  async updateUserById(filter, data) {
+    try {
+      const update = await UserModel.findOneAndUpdate(
+        filter,
+        { $set: data },
+        { new: true },
+      );
+      return update;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async deleteSingleRowById(filter) {
+    try {
+      const userDetails = await UserModel.findOneAndDelete(filter);
+      return userDetails;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
   async getSingleRowByFilter(filter) {
     try {
       const userDetails = await UserModel.findOne(filter);
       return userDetails;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async getAllUsersByFilter(filter, { page = 1, limit = 15 }) {
+    try {
+      let skip = (page - 1) * limit;
+      const data = await UserModel.find(filter)
+        .sort({ name: "asc" })
+        .skip(skip)
+        .limit(limit);
+
+      const count = await UserModel.countDocuments(filter);
+
+      return {
+        row: data.map(this.getUserPublicProfile),
+        pagination: {
+          page: page,
+          limit: limit,
+          total: count,
+        },
+      };
     } catch (exception) {
       throw exception;
     }

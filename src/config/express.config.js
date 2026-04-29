@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 
 //error handling middleware
 app.use((error, req, res, next) => {
-  //* console.log("grabage collrctor:",error)
+   console.log("grabage collrctor:",error)
   let statusCode = error.statusCode|| 500;
   let details = error.details || null;
   let msg = error.message || "Internal server Error...";
