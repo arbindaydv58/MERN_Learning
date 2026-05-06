@@ -14,4 +14,11 @@ const Gender = {
   OTHER: "other",
 };
 
-export { Status, UserRole, Gender };
+const OrderStatus = {
+  PENDING: "pending",
+  CONFIRMED: "comfirmed",
+  CANCELLED: "cancelled",
+  COMPLETED: "delivered",
+};
+
+export { Status, UserRole, Gender,OrderStatus };
