@@ -129,7 +129,7 @@ class OrderDetailController {
         cardDetail = await orderDetailSvc.updateCurrentCartItem(
           cardDetail,
           productDetail,
-          +cardDetail.quantity + quantity,
+          +cardDetail.quantity - quantity,
         );
       }
 
