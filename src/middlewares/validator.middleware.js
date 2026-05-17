@@ -13,16 +13,21 @@ const bodyValidator = (rules) => {
       next();
     } catch (exception) {
       let error = {
-        code: 400,
+        code: exception?.code || 400,
         message: "Validation Failed",
         status: "VALIDATION_FAILED",
         details: {},
       };
-      exception.details.map((errorObj) => {
-        let field = errorObj.path.pop();
-        error.details[field] = errorObj.message;
-      });
-      // console.error(exception)
+
+      if (Array.isArray(exception?.details)) {
+        exception.details.forEach((errorObj) => {
+          const field = errorObj?.path?.[errorObj.path.length - 1] || "unknown";
+          error.details[field] = errorObj.message;
+        });
+      } else {
+        error.message = exception?.message || error.message;
+      }
+
       next(error);
     }
   };

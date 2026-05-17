@@ -2,6 +2,8 @@ import { OrderStatus } from "../../config/constant.js";
 import orderDetailSvc from "../order-details/order-detail.service.js";
 import orderSvc from "./order.service.js";
 import { UserRole } from "../../config/constant.js";
+import TransactionModel from "../transaction/transaction.model.js";
+import { AppConfig, KhaltiConfig, paymentModes, PaymentStatus } from "../../config/config.js";
 
 class OrderController {
   async checkout(req, res, next) {
@@ -158,6 +160,101 @@ class OrderController {
       next(exception);
     }
   }
+
+  
+  async initiateKhaltiPaymentRequest(req, res, next) {
+    try {
+      const loginUser = req.loginUser;
+      const orderInfo = await orderSvc.getSingleRowByFilter({
+        orderCode: req.params.orderCode,
+        isPaid: { $ne: true },
+      });
+
+      if (!orderInfo) {
+        throw {
+          code: 404,
+          message: "Order not found or already paid",
+          status: "ORDER_NOT_FOUND",
+        };
+      }
+
+      const fetchResponse = await fetch(
+        KhaltiConfig.url + "epayment/initiate/",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Key ${KhaltiConfig.apiSecret}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            return_url: AppConfig.feURL + "/payment/verify",
+            website_url: AppConfig.feURL,
+            amount: Math.round(orderInfo.orderCode), //in paisa
+            purchase_order_id: orderInfo._id,
+            purchase_order_name: "Order Payment",
+          }),
+        },
+      );
+      const response = await fetchResponse.json();
+
+      res.json({
+        data: response,
+        message: "Khalti Payment Initiated",
+        status: "KHALTI_PAYMENT_INITIATED",
+        options: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  }
+
+  async addPaymentInfo(req, res, next) {
+    try {
+      // const loginUser = req.loginUser;
+      const data= req.body;
+      const orderInfo = await OrderSvc.getSingleRowByFilter({
+        orderCode: req.params.orderCode,
+        isPaid: { $ne: true },
+      });
+
+      if (!orderInfo) {
+        throw {
+          code: 404,
+          message: "Order not found or already paid",
+          status: "ORDER_NOT_FOUND",
+        };
+      }
+
+      const transaction ={
+        order:orderInfo._id,
+        paymentModes:paymentModes.KHALTI,
+        status:data.status ==="completed"? PaymentStatus.PAID:PaymentStatus.PENDING 
+        ,
+        amount: data.total_amount,
+        transId: data.idx,
+        data: JSON.stringify(data),
+      }
+
+      const transactionObj = await TransactionModel(transaction)
+      await transactionObj.save();
+
+      orderInfo.isPaid= true;
+      orderInfo.status= OrderStatus.CONFIRMED;
+
+      await orderInfo.save();
+
+      res.json({
+        data: transactionObj,
+        message: "Payment Successful",
+        status: "PAYMENT_INFO_ADDED",
+        options: null,
+      });
+
+    } catch (exception) {
+      next(exception);
+    }
+  }
+
 }
 
 const orderCtrl = new OrderController();

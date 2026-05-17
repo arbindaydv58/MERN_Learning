@@ -20,9 +20,37 @@ const AppConfig = {
   feURL: process.env.FRONTEND_URL,
   jwtSecret: process.env.JWT_SECRET_KEY,
 };
+
 const mongoConfig = {
   url: process.env.MONGODB_URL,
   dbName: process.env.MONGODB_NAME,
 };
 
-export { cloudinaryConfig, SMTPConfig, AppConfig, mongoConfig };
+const KhaltiConfig = {
+  url: process.env.KHALTI_PAYMENT_URL,
+  apiSecret: process.env.KHALTI_API_SECRET_KEY,
+};
+
+const paymentModes = {
+  KHALTI: "KHALTI",
+  ESEWA: "ESEWA",
+  CASH: "COD",
+};
+
+const PaymentStatus = {
+  PAID: "paid",
+  REFUND: "refund",
+  UNPAID: "unpaid",
+  CANCELLED: "cancelled",
+  PENDING: "pending",
+};
+
+export {
+  cloudinaryConfig,
+  SMTPConfig,
+  AppConfig,
+  mongoConfig,
+  KhaltiConfig,
+  paymentModes,
+  PaymentStatus,
+};

@@ -27,4 +27,11 @@ orderRouter.get(
   orderCtrl.getOrderDetail,
 );
 
+//payment request
+orderRouter.get(
+  "/payment/:orderCode/khalti",
+  checkLogin([UserRole.ADMIN, UserRole.CUSTOMER]),
+  orderCtrl.initiateKhaltiPaymentRequest,
+);
+
 export default orderRouter;

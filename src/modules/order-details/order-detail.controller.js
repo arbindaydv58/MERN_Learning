@@ -10,7 +10,6 @@ class OrderDetailController {
 
       const productDetail = await productSvc.getSingleRowByFilter({
         _id: product,
-        status: Status.ACTIVE,
       });
 
       if (!productDetail) {
@@ -18,6 +17,14 @@ class OrderDetailController {
           code: 422,
           message: "Product Does Not Exits",
           status: "PRODUCT_NOT_FOUND",
+        };
+      }
+
+      if (productDetail.status !== Status.ACTIVE) {
+        throw {
+          code: 422,
+          message: "Product is inactive",
+          status: "PRODUCT_INACTIVE",
         };
       }
 

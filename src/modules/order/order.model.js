@@ -25,6 +25,10 @@ const OrderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    total: {
+      type: Number,
+      required: true,
+    },
     status: {
       type: String,
       enum: Object.values(OrderStatus),

@@ -36,6 +36,33 @@ class OrderService {
     }
   }
 
+  async getSingleRowByFilter(filter) {
+    try {
+      const detail = await OrderModel.findOne(filter)
+        .populate("buyer", ["_id", "name", "email", "role", "phone", "image"])
+        .populate("createdBy", [
+          "_id",
+          "name",
+          "email",
+          "role",
+          "phone",
+          "image",
+        ])
+        .populate("updatedBy", [
+          "_id",
+          "name",
+          "email",
+          "role",
+          "phone",
+          "image",
+        ]);
+
+      return detail;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
   async associateOrderToDetail(cartItems, orderObj) {
     try {
       let odUpdate = [];
