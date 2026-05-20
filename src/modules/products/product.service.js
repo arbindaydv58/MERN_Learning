@@ -25,7 +25,6 @@ class ProductService {
         });
       }
 
-      payload.price = payload.price * 100;
       payload.afterDiscount =
         payload.price - (payload.price * payload.discount) / 100;
 
@@ -76,7 +75,6 @@ class ProductService {
         });
       }
 
-      payload.price = payload.price * 100;
       payload.afterDiscount =
         payload.price - (payload.price * payload.discount) / 100;
 

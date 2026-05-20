@@ -1,5 +1,6 @@
 import express from "express";
 import "./mongo.config.js";
+import "./sql.config.js";
 import router from "./router.config.js";
 const app = express();
 
@@ -24,8 +25,8 @@ app.use((req, res, next) => {
 
 //error handling middleware
 app.use((error, req, res, next) => {
-   console.log("grabage collrctor:",error)
-  let statusCode = error.statusCode|| 500;
+  console.log("grabage collrctor:", error);
+  let statusCode = error.code || error.statusCode || 500;
   let details = error.details || null;
   let msg = error.message || "Internal server Error...";
   let status = error.status || "SERVER_ERROR";

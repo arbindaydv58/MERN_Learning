@@ -181,17 +181,17 @@ class OrderController {
       const fetchResponse = await fetch(
         KhaltiConfig.url + "epayment/initiate/",
         {
-          method: "POST",
+          method: "post",
           headers: {
             Authorization: `Key ${KhaltiConfig.apiSecret}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            return_url: AppConfig.feURL + "/payment/verify",
+            return_url: AppConfig.feURL + "/payment",
             website_url: AppConfig.feURL,
-            amount: Math.round(orderInfo.orderCode), //in paisa
-            purchase_order_id: orderInfo._id,
-            purchase_order_name: "Order Payment",
+            amount: orderInfo.total, //in paisa
+            purchase_order_id: orderInfo.orderCode,
+            purchase_order_name: "Ecommerce Payment",
           }),
         },
       );
@@ -200,8 +200,7 @@ class OrderController {
       res.json({
         data: response,
         message: "Khalti Payment Initiated",
-        status: "KHALTI_PAYMENT_INITIATED",
-        options: null,
+        status: "SUCCESS",
       });
     } catch (exception) {
       next(exception);
@@ -212,7 +211,7 @@ class OrderController {
     try {
       // const loginUser = req.loginUser;
       const data= req.body;
-      const orderInfo = await OrderSvc.getSingleRowByFilter({
+      const orderInfo = await orderSvc.getSingleRowByFilter({
         orderCode: req.params.orderCode,
         isPaid: { $ne: true },
       });

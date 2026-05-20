@@ -21,17 +21,17 @@ orderRouter.post(
 
 orderRouter.get("/", checkLogin(), orderCtrl.ListAllOrders);
 
-orderRouter.get(
-  "/:orderId",
-  checkLogin([UserRole.ADMIN, UserRole.CUSTOMER]),
-  orderCtrl.getOrderDetail,
-);
-
 //payment request
 orderRouter.get(
   "/payment/:orderCode/khalti",
   checkLogin([UserRole.ADMIN, UserRole.CUSTOMER]),
   orderCtrl.initiateKhaltiPaymentRequest,
+);
+
+orderRouter.get(
+  "/:orderId",
+  checkLogin([UserRole.ADMIN, UserRole.CUSTOMER]),
+  orderCtrl.getOrderDetail,
 );
 
 export default orderRouter;
